@@ -1,51 +1,60 @@
 <?php
 
-// Iniciar curl
-$ch = curl_init();
+function getToken () {
+    // Iniciar curl
+    $ch = curl_init();
 
-// Url de la api
-$api_url = "https://accounts.zoho.com/oauth/v2/token";
+    // Url de la api
+    $api_url = "https://accounts.zoho.com/oauth/v2/token";
 
-// Configurar las opciones del curl
-curl_setopt($ch, CURLOPT_URL, $api_url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-
-
-// Definir headers
-$headers = [
-    'Content-Type: application/x-www-form-urlencoded'
-];
-
-// Establecer los headers
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-// Configurar el cuerpo de la solicitud
-$data = http_build_query([
-    'refresh_token' => '1000.0f73677ad0e2a1630a3da4ce7aa7695f.d5c4320c68312afffdf17acd9afa1949',
-    'client_id' => '1000.Y9U4433FXWGGFOJ5R7J2QP0M8QANIN',
-    'client_secret' => '050085f1003ce7e72e84a801c23dab93b8010846a9',
-    'grant_type' => 'refresh_token',
-    'redirect_uri' => ''
-]);
+    // Configurar las opciones del curl
+    curl_setopt($ch, CURLOPT_URL, $api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
 
 
-// Establecer los datos POST
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    // Definir headers
+    $headers = [
+        'Content-Type: application/x-www-form-urlencoded'
+    ];
 
-// Ejecutar la solicitud y obtener la respuesta
-$response = curl_exec($ch);
+    // Establecer los headers
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    // Configurar el cuerpo de la solicitud
+    $data = http_build_query([
+        'refresh_token' => '1000.0f73677ad0e2a1630a3da4ce7aa7695f.d5c4320c68312afffdf17acd9afa1949',
+        'client_id' => '1000.Y9U4433FXWGGFOJ5R7J2QP0M8QANIN',
+        'client_secret' => '050085f1003ce7e72e84a801c23dab93b8010846a9',
+        'grant_type' => 'refresh_token',
+        'redirect_uri' => ''
+    ]);
 
 
-// Verificar errores
-if(curl_errno($ch)) echo "Error el realizar la solicitud: " . curl_errno($ch);
+    // Establecer los datos POST
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
-// Mostrar la respuesta
-print_r($response);
+    // Ejecutar la solicitud y obtener la respuesta
+    $response = curl_exec($ch);
 
-// Cerrar la sesión
-curl_close($ch);
+    // Verificar errores
+    if (curl_errno($ch))
+        echo "Error el realizar la solicitud: " . curl_errno($ch);
 
+    // Decodificar el json
+    $data = json_decode($response, true);
+
+    // Obtener el token
+    $token = $data["access_token"];
+
+    // Cerrar la sesión
+    curl_close($ch);
+    
+    return $token;
+};
+
+
+getToken();
 
 
 ?>
